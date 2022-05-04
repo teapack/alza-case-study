@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <string name="app_name">Alza Case Study</string>
+
+    <string name="content_description_button_navigate_up">Navigate up</string>
+    <string name="content_description_button_refresh_categories">Refresh categories</string>
+    <string name="content_description_button_refresh_product_detail">Refresh product detail</string>
+    <string name="content_description_button_refresh_products">Refresh products</string>
+
+    <string name="title_categories">Categories</string>
+</resources>
