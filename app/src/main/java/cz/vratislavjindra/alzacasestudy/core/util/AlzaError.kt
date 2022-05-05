@@ -1,7 +1,11 @@
 package cz.vratislavjindra.alzacasestudy.core.util
 
-enum class AlzaError {
+import androidx.annotation.StringRes
+import cz.vratislavjindra.alzacasestudy.R
 
-    HTTP_ERROR,
-    UNSPECIFIED
+enum class AlzaError(@StringRes val errorMessageResId: Int) {
+
+    HTTP_ERROR(errorMessageResId = R.string.error_http),
+    INVALID_CATEGORY(errorMessageResId = R.string.error_invalid_category),
+    TIMEOUT(errorMessageResId = R.string.error_timeout)
 }

@@ -7,5 +7,11 @@
     <string name="content_description_button_refresh_product_detail">Refresh product detail</string>
     <string name="content_description_button_refresh_products">Refresh products</string>
 
+    <string name="error_http">HTTP error</string>
+    <string name="error_invalid_category">Invalid category</string>
+    <string name="error_timeout">Request timed out</string>
+
     <string name="title_categories">Categories</string>
+    <string name="title_product_detail">Product detail</string>
+    <string name="title_products">Products</string>
 </resources>

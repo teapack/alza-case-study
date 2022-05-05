@@ -54,7 +54,7 @@ fun AlzaCaseStudyTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primaryContainer.toArgb()
+            (view.context as Activity).window.statusBarColor = colorScheme.primaryContainer.copy(alpha = TOP_APP_BAR_ALPHA).toArgb()
             ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme
         }
     }

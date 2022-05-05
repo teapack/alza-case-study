@@ -3,10 +3,13 @@ package cz.vratislavjindra.alzacasestudy.dependency_injection
 import android.content.Context
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import cz.vratislavjindra.alzacasestudy.feature_categories.data.local.CategoryDatabase
-import cz.vratislavjindra.alzacasestudy.feature_categories.data.remote.CategoryApi
-import cz.vratislavjindra.alzacasestudy.feature_categories.data.repository.CategoryRepositoryImpl
-import cz.vratislavjindra.alzacasestudy.feature_categories.domain.repository.CategoryRepository
+import cz.vratislavjindra.alzacasestudy.feature_products.data.local.ProductDatabase
+import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.CategoryApi
+import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.ProductApi
+import cz.vratislavjindra.alzacasestudy.feature_products.data.repository.CategoryRepositoryImpl
+import cz.vratislavjindra.alzacasestudy.feature_products.data.repository.ProductRepositoryImpl
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.repository.CategoryRepository
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,16 +30,33 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCategoryRepository(
+        @ApplicationContext context: Context,
         api: CategoryApi,
-        db: CategoryDatabase
+        db: ProductDatabase
     ): CategoryRepository {
-        return CategoryRepositoryImpl(api = api, dao = db.categoryDao)
+        return CategoryRepositoryImpl(context = context, api = api, dao = db.categoryDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(
+        @ApplicationContext context: Context,
+        api: ProductApi,
+        db: ProductDatabase
+    ): ProductRepository {
+        return ProductRepositoryImpl(context = context, api = api, dao = db.productDao)
     }
 
     @Provides
     @Singleton
     fun provideCategoryApi(retrofit: Retrofit): CategoryApi {
         return retrofit.create(CategoryApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductApi(retrofit: Retrofit): ProductApi {
+        return retrofit.create(ProductApi::class.java)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -46,7 +66,7 @@ object AppModule {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor())
+            .addInterceptor(loggingInterceptor)
             .build()
         val json = Json {
             ignoreUnknownKeys = true
@@ -61,12 +81,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCategoryDatabase(@ApplicationContext context: Context) : CategoryDatabase {
+    fun provideProductDatabase(@ApplicationContext context: Context) : ProductDatabase {
         return Room
             .databaseBuilder(
                 context,
-                CategoryDatabase::class.java,
-                CategoryDatabase.DATABASE_NAME
+                ProductDatabase::class.java,
+                ProductDatabase.DATABASE_NAME
             )
             .build()
     }
