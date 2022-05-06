@@ -1,13 +1,18 @@
 package cz.vratislavjindra.alzacasestudy.ui.common
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import cz.vratislavjindra.alzacasestudy.ui.common.snackbar.SnackbarData
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.AlzaTopAppBar
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
+import cz.vratislavjindra.alzacasestudy.ui.theme.BackgroundDark
+import cz.vratislavjindra.alzacasestudy.ui.theme.BackgroundLight
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -22,10 +27,16 @@ fun AlzaScaffold(
     snackbarFlow: Flow<SnackbarData>? = null,
     content: @Composable (paddingValues: PaddingValues) -> Unit
 ) {
+    val context = LocalContext.current
     LaunchedEffect(key1 = snackbarHostState) {
         snackbarFlow?.collectLatest { snackbarData ->
+            val snackbarMessage = when (snackbarData) {
+                is SnackbarData.ErrorSnackbarData ->
+                    snackbarData.message ?: context.getString(snackbarData.error.errorMessageResId)
+                is SnackbarData.MessageSnackbarData -> snackbarData.message
+            }
             val result = snackbarHostState.showSnackbar(
-                message = snackbarData.message,
+                message = snackbarMessage,
                 actionLabel = snackbarData.snackbarAction?.actionLabel
             )
             if (result == SnackbarResult.ActionPerformed) {
@@ -57,6 +68,16 @@ fun AlzaScaffold(
             )
         }
     ) { innerPadding ->
-        content(innerPadding)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = if (isSystemInDarkTheme()) {
+                        BackgroundDark
+                    } else {
+                        BackgroundLight
+                    }
+                )
+        ) { content(innerPadding) }
     }
 }

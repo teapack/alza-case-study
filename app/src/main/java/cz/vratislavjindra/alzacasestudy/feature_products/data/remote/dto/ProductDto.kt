@@ -10,6 +10,11 @@ data class ProductDto(
     val name: String,
     @SerialName("spec") val description: String,
     @SerialName("img") val imageUrl: String?,
+    val price: String?,
+    @SerialName("avail") val availability: String,
+    @SerialName("can_buy") val canBuy: Boolean,
+    val rating: Float,
+    val order: Int,
     val categoryId: Int
 ) {
 
@@ -19,6 +24,11 @@ data class ProductDto(
             name = name,
             description = description,
             imageUrl = imageUrl,
+            price = price,
+            availability = availability,
+            canBuy = canBuy,
+            rating = rating,
+            order = order,
             categoryId = categoryId
         )
     }

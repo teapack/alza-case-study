@@ -26,8 +26,9 @@ fun AlzaTopAppBar(
         title = {
             Text(
                 text = title,
-                maxLines = 1,
+                color = MaterialTheme.colorScheme.onPrimary,
                 overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
                 style = MaterialTheme.typography.titleLarge
             )
         },
@@ -39,7 +40,8 @@ fun AlzaTopAppBar(
                         imageVector = Icons.Rounded.ArrowBack,
                         contentDescription = stringResource(
                             id = R.string.content_description_button_navigate_up
-                        )
+                        ),
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -54,7 +56,10 @@ fun AlzaTopAppBar(
                                 initialValue = 0F,
                                 targetValue = 360F,
                                 animationSpec = infiniteRepeatable(
-                                    animation = tween(durationMillis = 1_500, easing = LinearEasing)
+                                    animation = tween(
+                                        durationMillis = 1_500,
+                                        easing = LinearEasing
+                                    )
                                 )
                             )
                             Modifier.rotate(degrees = rotationAngle)
@@ -64,14 +69,17 @@ fun AlzaTopAppBar(
                         Icon(
                             imageVector = action.icon,
                             contentDescription = action.contentDescription,
-                            modifier = rotationModifier
+                            modifier = rotationModifier,
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
             }
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = TOP_APP_BAR_ALPHA)
+            containerColor = MaterialTheme.colorScheme.primary.copy(
+                alpha = TOP_APP_BAR_ALPHA
+            )
         )
     )
 }

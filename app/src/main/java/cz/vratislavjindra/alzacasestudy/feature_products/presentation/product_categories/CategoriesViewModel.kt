@@ -54,7 +54,7 @@ class CategoriesListViewModel @Inject constructor(
                                 categories = result.data ?: emptyList()
                             )
                             snackbarDataChannel.send(
-                                element = SnackbarData(
+                                element = SnackbarData.MessageSnackbarData(
                                     message = result.errorMessage
                                 )
                             )

@@ -21,7 +21,7 @@ interface ProductDao {
     @Query("DELETE FROM products WHERE id = :id")
     suspend fun deleteProductById(id: Int)
 
-    @Query("SELECT * FROM products WHERE categoryId = :categoryId")
+    @Query("SELECT * FROM products WHERE categoryId = :categoryId ORDER BY `order`")
     suspend fun getProductsByCategory(categoryId: Int): List<ProductEntity>
 
     @Query("SELECT * FROM products WHERE id = :id")

@@ -1,6 +1,6 @@
 package cz.vratislavjindra.alzacasestudy.feature_products.domain.model
 
-data class Product(
+data class ProductListItem(
     val id: Int,
     val name: String,
     val description: String,

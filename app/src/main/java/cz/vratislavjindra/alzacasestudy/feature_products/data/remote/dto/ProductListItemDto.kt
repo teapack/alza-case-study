@@ -5,11 +5,16 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProductOverviewDto(
+data class ProductListItemDto(
     val id: Int,
     val name: String,
     @SerialName("spec") val description: String,
-    @SerialName("img") val imageUrl: String?
+    @SerialName("img") val imageUrl: String?,
+    val price: String?,
+    @SerialName("avail") val availability: String,
+    @SerialName("can_buy") val canBuy: Boolean,
+    val rating: Float,
+    val order: Int
 ) {
 
     fun toProductEntity(categoryId: Int): ProductEntity {
@@ -18,6 +23,11 @@ data class ProductOverviewDto(
             name = name,
             description = description,
             imageUrl = imageUrl,
+            price = price,
+            availability = availability,
+            canBuy = canBuy,
+            rating = rating,
+            order = order,
             categoryId = categoryId
         )
     }

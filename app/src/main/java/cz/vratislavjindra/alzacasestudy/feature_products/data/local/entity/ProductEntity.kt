@@ -3,7 +3,7 @@ package cz.vratislavjindra.alzacasestudy.feature_products.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
-import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductOverview
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductListItem
 
 @Entity(tableName = "products")
 data class ProductEntity(
@@ -11,6 +11,11 @@ data class ProductEntity(
     val name: String,
     val description: String,
     val imageUrl: String?,
+    val price: String?,
+    val availability: String,
+    val canBuy: Boolean,
+    val rating: Float,
+    val order: Int,
     val categoryId: Int
 ) {
 
@@ -19,14 +24,24 @@ data class ProductEntity(
             id = id,
             name = name,
             description = description,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            price = price,
+            availability = availability,
+            canBuy = canBuy,
+            rating = rating
         )
     }
 
-    fun toProductOverview(): ProductOverview {
-        return ProductOverview(
+    fun toProductListItem(): ProductListItem {
+        return ProductListItem(
             id = id,
-            name = name
+            name = name,
+            description = description,
+            imageUrl = imageUrl,
+            price = price,
+            availability = availability,
+            canBuy = canBuy,
+            rating = rating
         )
     }
 }

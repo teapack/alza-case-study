@@ -8,14 +8,16 @@ import kotlinx.serialization.Serializable
 data class CategoryDto(
     val id: Int,
     val name: String,
-    @SerialName("img") val imageUrl: String?
+    @SerialName("img") val imageUrl: String?,
+    val order: Int
 ) {
 
     fun toCategoryEntity(): CategoryEntity {
         return CategoryEntity(
             id = id,
             name = name,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            order = order
         )
     }
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetProductsResponse(
-    val data: List<ProductOverviewDto>?,
+    val data: List<ProductListItemDto>?,
     @SerialName("err") val errorCode: Int,
     @SerialName("msg") val errorMessage: String?
 )

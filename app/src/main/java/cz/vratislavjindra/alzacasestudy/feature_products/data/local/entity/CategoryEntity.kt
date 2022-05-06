@@ -8,7 +8,8 @@ import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Category
 data class CategoryEntity(
     @PrimaryKey val id: Int,
     val name: String,
-    val imageUrl: String?
+    val imageUrl: String?,
+    val order: Int
 ) {
 
     fun toCategory(): Category {

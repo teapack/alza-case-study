@@ -8,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import cz.vratislavjindra.alzacasestudy.Screen
 import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
 import cz.vratislavjindra.alzacasestudy.core.util.Resource
-import cz.vratislavjindra.alzacasestudy.core.util.UiEvent
-import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductOverview
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.use_case.GetProducts
 import cz.vratislavjindra.alzacasestudy.ui.common.snackbar.SnackbarData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,11 +26,8 @@ class ProductsViewModel @Inject constructor(
     private val _state = mutableStateOf(value = ProductsScreenState())
     val state: State<ProductsScreenState> = _state
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
-    private val productClickedChannel = Channel<SnackbarData>(capacity = Channel.CONFLATED)
-    val productClickedFlow = productClickedChannel.receiveAsFlow()
+    private val snackbarChannel = Channel<SnackbarData>(capacity = Channel.CONFLATED)
+    val snackbarFlow = snackbarChannel.receiveAsFlow()
 
     private var getProductsJob: Job? = null
 
@@ -47,8 +42,8 @@ class ProductsViewModel @Inject constructor(
                 products = emptyList()
             )
             viewModelScope.launch {
-                _eventFlow.emit(
-                    value = UiEvent.ShowErrorSnackbar(error = AlzaError.INVALID_CATEGORY)
+                snackbarChannel.send(
+                    element = SnackbarData.ErrorSnackbarData(error = AlzaError.INVALID_CATEGORY)
                 )
             }
         } else {
@@ -58,33 +53,26 @@ class ProductsViewModel @Inject constructor(
                 getProductsUseCase(categoryId = categoryId)
                     .onEach { result ->
                         when (result) {
-                            is Resource.Success -> {
-                                _state.value = state.value.copy(
-                                    loading = false,
-                                    products = result.data ?: emptyList()
-                                )
-                            }
-                            is Resource.Loading -> {
-                                // TODO I could also show these products: state.value.products
-                                _state.value = state.value.copy(
-                                    loading = true,
-                                    products = result.data ?: emptyList()
-                                )
-                            }
+                            is Resource.Success -> _state.value = state.value.copy(
+                                loading = false,
+                                products = result.data ?: emptyList()
+                            )
+                            // TODO I could also show these products: state.value.products
+                            is Resource.Loading -> _state.value = state.value.copy(
+                                loading = true,
+                                products = result.data ?: emptyList()
+                            )
+                            // TODO I could also show these products: state.value.products
                             is Resource.Error -> {
-                                // TODO I could also show these products: state.value.products
                                 _state.value = state.value.copy(
                                     loading = false,
                                     products = result.data ?: emptyList()
                                 )
-                                _eventFlow.emit(
-                                    value = UiEvent.ShowErrorSnackbarWithCustomMessage(
+                                snackbarChannel.send(
+                                    element = SnackbarData.ErrorSnackbarData(
                                         error = result.error,
                                         message = result.errorMessage
                                     )
-                                )
-                                productClickedChannel.send(
-                                    element = SnackbarData(message = result.errorMessage)
                                 )
                             }
                         }
@@ -94,9 +82,13 @@ class ProductsViewModel @Inject constructor(
         }
     }
 
-    fun onProductClick(product: ProductOverview) {
+    fun onProductActionClick() {
         viewModelScope.launch {
-            productClickedChannel.send(element = SnackbarData(message = product.name))
+            snackbarChannel.send(
+                element = SnackbarData.ErrorSnackbarData(
+                    error = AlzaError.FEATURE_NOT_IMPLEMENTED_YET
+                )
+            )
         }
     }
 }

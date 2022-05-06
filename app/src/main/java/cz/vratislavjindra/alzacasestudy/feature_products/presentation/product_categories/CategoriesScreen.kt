@@ -1,18 +1,16 @@
 package cz.vratislavjindra.alzacasestudy.feature_products.presentation.product_categories
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
@@ -23,7 +21,9 @@ import cz.vratislavjindra.alzacasestudy.R
 import cz.vratislavjindra.alzacasestudy.Screen
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Category
 import cz.vratislavjindra.alzacasestudy.ui.common.AlzaScaffold
-import cz.vratislavjindra.alzacasestudy.ui.common.list.CardListItem
+import cz.vratislavjindra.alzacasestudy.ui.common.card.SurfaceCard
+import cz.vratislavjindra.alzacasestudy.ui.common.list.ListItemImage
+import cz.vratislavjindra.alzacasestudy.ui.common.list.ListItemTitle
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 
 @Composable
@@ -48,9 +48,7 @@ fun CategoriesScreen(
         ),
         snackbarFlow = viewModel.snackbarDataFlow
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             CategoryList(
                 categories = viewModel.state.value.categories,
                 paddingValues = paddingValues
@@ -78,39 +76,57 @@ private fun CategoryList(
         sides = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
     ).asPaddingValues().calculateBottomPadding()
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 172.dp),
+        columns = GridCells.Adaptive(minSize = 176.dp),
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
-            start = paddingValues.calculateStartPadding(layoutDirection = LayoutDirection.Ltr) + 8.dp,
+            start = paddingValues.calculateStartPadding(
+                layoutDirection = LayoutDirection.Ltr
+            ) + 8.dp,
             top = paddingValues.calculateTopPadding() + 8.dp,
             end = paddingValues.calculateEndPadding(layoutDirection = LayoutDirection.Rtl) + 8.dp,
             bottom = navigationBarsPadding + 8.dp
         )
     ) {
-
         items(items = categories) { category ->
-            CardListItem(
-                title = category.name,
+            CategoryCard(
+                name = category.name,
                 imageUrl = category.imageUrl,
                 modifier = Modifier.padding(all = 8.dp)
             ) { onCategoryClick(category) }
         }
     }
-//    LazyColumn {
-//        itemsIndexed(items = categories) { index, category ->
-//            if (index == 0) {
-//                Spacer(modifier = Modifier.height(height = paddingValues.calculateTopPadding()))
-//            }
-//            CardListItem(
-//                title = category.name,
-//                imageUrl = category.imageUrl,
-//            ) { onCategoryClick(category) }
-//            if (index == categories.size - 1) {
-//                val navigationBarsPadding = WindowInsets.navigationBars.only(
-//                    sides = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
-//                ).asPaddingValues().calculateBottomPadding()
-//                Spacer(modifier = Modifier.height(height = navigationBarsPadding + 16.dp))
-//            }
-//        }
-//    }
+}
+
+@Composable
+private fun CategoryCard(
+    name: String,
+    imageUrl: String?,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    SurfaceCard(
+        onClick = onClick,
+        modifier = modifier.height(height = 80.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            imageUrl?.let {
+                ListItemImage(
+                    imageUrl = it,
+                    contentDescription = name,
+                    modifier = Modifier.weight(weight = 1f)
+                )
+                Spacer(modifier = Modifier.width(width = 16.dp))
+            }
+            ListItemTitle(
+                title = name,
+                modifier = Modifier.weight(weight = 3f),
+                maxLines = 2
+            )
+        }
+    }
 }

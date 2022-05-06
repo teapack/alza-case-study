@@ -8,7 +8,7 @@ import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.ProductApi
 import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.dao.FilterParameters
 import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.dao.GetProductsByCategoryRequest
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
-import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductOverview
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductListItem
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.repository.ProductRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -26,10 +26,10 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getProductsByCategory(
         categoryId: Int
-    ): Flow<Resource<List<ProductOverview>>> = flow {
+    ): Flow<Resource<List<ProductListItem>>> = flow {
         emit(value = Resource.Loading())
         val products = dao.getProductsByCategory(categoryId = categoryId).map {
-            it.toProductOverview()
+            it.toProductListItem()
         }
         emit(value = Resource.Loading(data = products))
         var errorOccurred = false
@@ -85,7 +85,7 @@ class ProductRepositoryImpl @Inject constructor(
         }
         if (!errorOccurred) {
             val newProducts = dao.getProductsByCategory(categoryId = categoryId).map {
-                it.toProductOverview()
+                it.toProductListItem()
             }
             emit(value = Resource.Success(data = newProducts))
         }
@@ -97,9 +97,9 @@ class ProductRepositoryImpl @Inject constructor(
         emit(value = Resource.Loading(data = product))
         var errorOccurred = false
         try {
-            val remoteProduct = api.getProductDetail(productId = id)
+            val productDetailResponse = api.getProductDetail(productId = id)
             dao.deleteProductById(id = id)
-            dao.insertProduct(product = remoteProduct.toProductEntity())
+            dao.insertProduct(product = productDetailResponse.data.toProductEntity())
         } catch (e: HttpException) {
             // TODO I should handle all the exceptions better (I'm duplicating code here).
             errorOccurred = true
