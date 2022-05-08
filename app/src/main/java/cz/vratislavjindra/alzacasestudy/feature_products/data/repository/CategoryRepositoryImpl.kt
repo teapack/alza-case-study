@@ -1,6 +1,8 @@
 package cz.vratislavjindra.alzacasestudy.feature_products.data.repository
 
 import android.content.Context
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
 import cz.vratislavjindra.alzacasestudy.core.util.Resource
 import cz.vratislavjindra.alzacasestudy.feature_products.data.local.CategoryDao
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
@@ -28,8 +31,19 @@ class CategoryRepositoryImpl @Inject constructor(
         var errorOccurred = false
         try {
             val categoryList = api.getAllCategories()
+            // Clear old cached categories.
             dao.deleteAllCategories()
+            // Save the new categories to cache.
             dao.insertCategories(categories = categoryList.data.map { it.toCategoryEntity() })
+            // Schedule a worker to clear the cache after 1 minute.
+            val clearCacheWorkRequest = OneTimeWorkRequestBuilder<ClearCategoriesCacheWorker>()
+                    .setInitialDelay(1, TimeUnit.MINUTES)
+                    .addTag(CLEAR_CATEGORIES_CACHE_WORKER_TAG)
+                    .build()
+            WorkManager.getInstance(context).apply {
+                cancelAllWorkByTag(CLEAR_CATEGORIES_CACHE_WORKER_TAG)
+                enqueue(clearCacheWorkRequest)
+            }
         } catch (e: HttpException) {
             // TODO I should handle all the exceptions better (I'm duplicating code here).
             errorOccurred = true
