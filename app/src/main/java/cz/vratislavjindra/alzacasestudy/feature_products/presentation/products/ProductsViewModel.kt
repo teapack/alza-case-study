@@ -32,7 +32,7 @@ class ProductsViewModel @Inject constructor(
     private var getProductsJob: Job? = null
 
     init {
-        getProducts(categoryId = savedStateHandle.get<Int>(Screen.ProductsScreen.argument1!!))
+        getProducts(categoryId = savedStateHandle.get<Int>(Screen.ProductsScreen.navArgument!!))
     }
 
     fun getProducts(categoryId: Int?) {

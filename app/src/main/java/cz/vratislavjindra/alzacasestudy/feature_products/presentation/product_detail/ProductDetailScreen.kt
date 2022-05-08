@@ -26,14 +26,13 @@ import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 fun ProductDetailScreen(
     navController: NavController,
     viewModel: ProductDetailViewModel = hiltViewModel(),
-    productId: Int?,
-    productName: String?
+    productId: Int?
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     AlzaScaffold(
         navController = navController,
         snackbarHostState = snackbarHostState,
-        topBarTitle = productName ?: stringResource(id = R.string.title_product_detail),
+        topBarTitle = stringResource(id = R.string.title_product_detail),
         topAppBarActions = listOf(
             TopAppBarAction(
                 icon = Icons.Rounded.Refresh,

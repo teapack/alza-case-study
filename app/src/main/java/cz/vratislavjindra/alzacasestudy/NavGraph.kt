@@ -18,37 +18,29 @@ fun NavGraph() {
             CategoriesScreen(navController = navController)
         }
         composable(
-            route = "${Screen.ProductsScreen.route}/{${Screen.ProductsScreen.argument1}}/{${
-                Screen.ProductsScreen.argument2
-            }}",
+            route = "${Screen.ProductsScreen.route}/{${Screen.ProductsScreen.navArgument}}",
             arguments = listOf(
-                navArgument(name = Screen.ProductsScreen.argument1!!) { type = NavType.IntType },
-                navArgument(name = Screen.ProductsScreen.argument2!!) { type = NavType.StringType }
+                navArgument(name = Screen.ProductsScreen.navArgument!!) { type = NavType.IntType }
             )
         ) {
             ProductsScreen(
                 navController = navController,
-                categoryId = it.arguments?.getInt(Screen.ProductsScreen.argument1),
-                categoryName = it.arguments?.getString(Screen.ProductsScreen.argument2)
+                categoryId = it.arguments?.getInt(Screen.ProductsScreen.navArgument)
             )
         }
         composable(
             route = "${Screen.ProductDetailScreen.route}/{${
-                Screen.ProductDetailScreen.argument1
-            }}/{${Screen.ProductDetailScreen.argument2}}",
+                Screen.ProductDetailScreen.navArgument
+            }}",
             arguments = listOf(
-                navArgument(name = Screen.ProductDetailScreen.argument1!!) {
+                navArgument(name = Screen.ProductDetailScreen.navArgument!!) {
                     type = NavType.IntType
-                },
-                navArgument(name = Screen.ProductDetailScreen.argument2!!) {
-                    type = NavType.StringType
                 }
             )
         ) {
             ProductDetailScreen(
                 navController = navController,
-                productId = it.arguments?.getInt(Screen.ProductDetailScreen.argument1),
-                productName = it.arguments?.getString(Screen.ProductDetailScreen.argument2)
+                productId = it.arguments?.getInt(Screen.ProductDetailScreen.navArgument)
             )
         }
     }
@@ -56,21 +48,18 @@ fun NavGraph() {
 
 sealed class Screen(
     val route: String,
-    val argument1: String? = null,
-    val argument2: String? = null
+    val navArgument: String? = null
 ) {
 
     object CategoriesScreen : Screen(route = "categories")
 
     object ProductsScreen : Screen(
         route = "products",
-        argument1 = "categoryId",
-        argument2 = "categoryName"
+        navArgument = "categoryId"
     )
 
     object ProductDetailScreen : Screen(
         route = "product_detail",
-        argument1 = "productId",
-        argument2 = "productName"
+        navArgument = "productId"
     )
 }

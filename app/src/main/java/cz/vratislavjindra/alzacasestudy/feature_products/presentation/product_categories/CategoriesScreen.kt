@@ -52,9 +52,7 @@ fun CategoriesScreen(
             CategoryList(
                 categories = viewModel.state.value.categories,
                 paddingValues = paddingValues
-            ) {
-                navController.navigate(route = "${Screen.ProductsScreen.route}/${it.id}/${it.name}")
-            }
+            ) { navController.navigate(route = "${Screen.ProductsScreen.route}/${it.id}") }
             if (viewModel.state.value.loading) {
                 LinearProgressIndicator(
                     modifier = Modifier

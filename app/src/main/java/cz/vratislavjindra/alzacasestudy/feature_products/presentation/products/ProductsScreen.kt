@@ -30,14 +30,13 @@ import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 fun ProductsScreen(
     navController: NavController,
     viewModel: ProductsViewModel = hiltViewModel(),
-    categoryId: Int?,
-    categoryName: String?
+    categoryId: Int?
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     AlzaScaffold(
         navController = navController,
         snackbarHostState = snackbarHostState,
-        topBarTitle = categoryName ?: stringResource(id = R.string.title_products),
+        topBarTitle = stringResource(id = R.string.title_products),
         topAppBarActions = listOf(
             TopAppBarAction(
                 icon = Icons.Rounded.Refresh,
@@ -54,11 +53,7 @@ fun ProductsScreen(
                 products = viewModel.state.value.products,
                 paddingValues = paddingValues,
                 onProductActionClick = viewModel::onProductActionClick
-            ) {
-                navController.navigate(
-                    route = "${Screen.ProductDetailScreen.route}/${it.id}/${it.name}"
-                )
-            }
+            ) { navController.navigate(route = "${Screen.ProductDetailScreen.route}/${it.id}") }
             if (viewModel.state.value.loading) {
                 LinearProgressIndicator(
                     modifier = Modifier

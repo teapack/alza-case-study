@@ -35,7 +35,7 @@ class ProductDetailViewModel @Inject constructor(
 
     init {
         getProductDetail(
-            productId = savedStateHandle.get<Int>(Screen.ProductDetailScreen.argument1!!)
+            productId = savedStateHandle.get<Int>(Screen.ProductDetailScreen.navArgument!!)
         )
     }
 
