@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.product_attribute
+package cz.vratislavjindra.alzacasestudy.ui.common.product.attribute
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -23,7 +22,8 @@ import cz.vratislavjindra.alzacasestudy.ui.common.AlzaScaffold
 import cz.vratislavjindra.alzacasestudy.ui.common.card.SurfaceCard
 import cz.vratislavjindra.alzacasestudy.ui.common.list.ItemDivider
 import cz.vratislavjindra.alzacasestudy.ui.common.list.ItemImage
-import cz.vratislavjindra.alzacasestudy.ui.common.product_attribute.*
+import cz.vratislavjindra.alzacasestudy.ui.common.product.action.BuyProductAction
+import cz.vratislavjindra.alzacasestudy.ui.common.product.attribute.*
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 
 @Composable
@@ -79,11 +79,9 @@ private fun ProductList(
         columns = GridCells.Adaptive(minSize = 320.dp),
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
-            start = paddingValues.calculateStartPadding(
-                layoutDirection = LayoutDirection.Ltr
-            ) + 8.dp,
+            start = 8.dp,
             top = paddingValues.calculateTopPadding() + 8.dp,
-            end = paddingValues.calculateEndPadding(layoutDirection = LayoutDirection.Rtl) + 8.dp,
+            end = 8.dp,
             bottom = navigationBarsPadding + 8.dp
         )
     ) {
@@ -195,16 +193,7 @@ private fun ProductCard(
                     )
                 }
                 Spacer(modifier = Modifier.weight(weight = 1f))
-                TextButton(onClick = onProductActionClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.ShoppingCart,
-                        contentDescription = stringResource(
-                            id = R.string.content_description_button_buy
-                        )
-                    )
-                    Spacer(modifier = Modifier.width(width = 8.dp))
-                    Text(text = stringResource(id = R.string.button_buy))
-                }
+                BuyProductAction(onClick = onProductActionClick)
             }
         }
     }

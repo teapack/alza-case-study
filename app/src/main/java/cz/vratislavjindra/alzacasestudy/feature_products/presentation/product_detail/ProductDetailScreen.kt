@@ -5,10 +5,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,7 +19,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import cz.vratislavjindra.alzacasestudy.R
 import cz.vratislavjindra.alzacasestudy.ui.common.AlzaScaffold
-import cz.vratislavjindra.alzacasestudy.ui.common.product_attribute.*
+import cz.vratislavjindra.alzacasestudy.ui.common.product.action.BuyProductAction
+import cz.vratislavjindra.alzacasestudy.ui.common.product.attribute.*
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 
 @Composable
@@ -81,65 +82,74 @@ private fun ProductDetail(
     paddingValues: PaddingValues,
     onProductActionClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState())
-    ) {
-        ProductTitle(
-            title = name,
-            modifier = Modifier.padding(
-                start = 16.dp,
-                top = paddingValues.calculateTopPadding() + 16.dp,
-                end = 16.dp,
-                bottom = 16.dp
-            ),
-            small = false
-        )
-        StarRating(
-            rating = rating,
-            small = false,
-            modifier = Modifier.padding(horizontal = 10.dp)
-        )
-        Spacer(modifier = Modifier.height(height = 16.dp))
-        imageUrl?.let {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(data = it)
-                    .crossfade(enable = true)
-                    .build(),
-                contentDescription = name,
-                modifier = Modifier.aspectRatio(ratio = 1f)
+    Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .weight(weight = 1f)
+                .verticalScroll(state = rememberScrollState())
+        ) {
+            ProductTitle(
+                title = name,
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    top = paddingValues.calculateTopPadding() + 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                ),
+                small = false
+            )
+            StarRating(
+                rating = rating,
+                small = false,
+                modifier = Modifier.padding(horizontal = 10.dp)
             )
             Spacer(modifier = Modifier.height(height = 16.dp))
-        }
-        Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-            ProductAvailability(
-                availability = availability,
-                available = canBuy,
-                small = false,
-                modifier = Modifier.weight(weight = 1f)
-            )
-            price?.let {
-                Spacer(modifier = Modifier.width(width = 16.dp))
-                ProductPrice(
-                    price = price,
-                    small = false
+            imageUrl?.let {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(data = it)
+                        .crossfade(enable = true)
+                        .build(),
+                    contentDescription = name,
+                    modifier = Modifier.aspectRatio(ratio = 1f)
+                )
+                Spacer(modifier = Modifier.height(height = 16.dp))
+            }
+            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                ProductAvailability(
+                    availability = availability,
+                    available = canBuy,
+                    small = false,
+                    modifier = Modifier.weight(weight = 1f)
                 )
             }
+            ProductDescription(
+                description = description,
+                short = false,
+                modifier = Modifier.padding(all = 16.dp)
+            )
         }
         val navigationBarsPadding = WindowInsets.navigationBars.only(
             sides = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
         ).asPaddingValues().calculateBottomPadding()
-        ProductDescription(
-            description = description,
-            short = false,
-            modifier = Modifier.padding(
-                start = 16.dp,
-                top = 16.dp,
-                end = 16.dp,
-                bottom = navigationBarsPadding + 16.dp
-            )
-        )
+        Surface(shadowElevation = 16.dp) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(bottom = navigationBarsPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                price?.let {
+                    ProductPrice(price = price, small = false)
+                }
+                Spacer(
+                    modifier = Modifier
+                        .width(width = 16.dp)
+                        .weight(weight = 1f)
+                )
+                BuyProductAction(onClick = onProductActionClick)
+            }
+        }
     }
 }
