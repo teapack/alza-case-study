@@ -22,7 +22,7 @@ import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductLis
 import cz.vratislavjindra.alzacasestudy.ui.common.AlzaScaffold
 import cz.vratislavjindra.alzacasestudy.ui.common.card.SurfaceCard
 import cz.vratislavjindra.alzacasestudy.ui.common.list.ItemDivider
-import cz.vratislavjindra.alzacasestudy.ui.common.list.ListItemImage
+import cz.vratislavjindra.alzacasestudy.ui.common.list.ItemImage
 import cz.vratislavjindra.alzacasestudy.ui.common.product_attribute.*
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 
@@ -131,7 +131,7 @@ private fun ProductCard(
                 verticalAlignment = Alignment.Top
             ) {
                 imageUrl?.let {
-                    ListItemImage(
+                    ItemImage(
                         imageUrl = imageUrl,
                         contentDescription = name,
                         modifier = Modifier

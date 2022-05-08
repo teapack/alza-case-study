@@ -22,7 +22,7 @@ import cz.vratislavjindra.alzacasestudy.Screen
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Category
 import cz.vratislavjindra.alzacasestudy.ui.common.AlzaScaffold
 import cz.vratislavjindra.alzacasestudy.ui.common.card.SurfaceCard
-import cz.vratislavjindra.alzacasestudy.ui.common.list.ListItemImage
+import cz.vratislavjindra.alzacasestudy.ui.common.list.ItemImage
 import cz.vratislavjindra.alzacasestudy.ui.common.list.ListItemTitle
 import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
 
@@ -115,7 +115,7 @@ private fun CategoryCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             imageUrl?.let {
-                ListItemImage(
+                ItemImage(
                     imageUrl = it,
                     contentDescription = name,
                     modifier = Modifier.weight(weight = 1f)

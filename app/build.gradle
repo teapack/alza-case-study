@@ -70,7 +70,8 @@ dependencies {
     // Accompanist.
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     // Coil.
-    implementation 'io.coil-kt:coil-compose:2.0.0-rc03'
+    implementation "io.coil-kt:coil-compose:$coil_version"
+    implementation "io.coil-kt:coil-svg:$coil_version"
     // Dependency injection.
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"

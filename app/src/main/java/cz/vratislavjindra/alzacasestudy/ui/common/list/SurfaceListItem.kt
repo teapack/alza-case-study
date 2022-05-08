@@ -24,7 +24,7 @@ fun SurfaceListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             imageUrl?.let {
-                ListItemImage(imageUrl = it, contentDescription = title)
+                ItemImage(imageUrl = it, contentDescription = title)
                 Spacer(modifier = Modifier.width(width = 16.dp))
             }
             ListItemTitle(title = title)
