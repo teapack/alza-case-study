@@ -121,28 +121,39 @@ class ProductRepositoryImpl @Inject constructor(
         emit(value = Resource.Loading(data = product))
         var errorOccurred = false
         try {
-            val productDetailResponse = api.getProductDetail(productId = id)
-            // Clear old cached product.
-            dao.deleteProductById(id = id)
-            // Save the new product to cache.
-            dao.insertProduct(product = productDetailResponse.data.toProductEntity())
-            // Schedule a worker to clear the cache after 1 minute.
-            val clearCacheWorkRequest = OneTimeWorkRequestBuilder<ClearProductsCacheWorker>()
-                .setInitialDelay(1, TimeUnit.MINUTES)
-                .addTag(CLEAR_PRODUCT_CACHE_WORKER_TAG)
-                .addTag("$CLEAR_PRODUCT_CACHE_WORKER_TAG_PREFIX$id")
-                .setInputData(
-                    workDataOf(
-                        Pair(
-                            first = CLEAR_PRODUCT_CACHE_INPUT_DATA_KEY_PRODUCT_ID,
-                            second = id
+            val response = api.getProductDetail(productId = id)
+            if (response.errorCode == 0 && response.errorMessage == null && response.data != null) {
+                // Clear old cached product.
+                dao.deleteProductById(id = id)
+                // Save the new product to cache.
+                dao.insertProduct(product = response.data.toProductEntity())
+                // Schedule a worker to clear the cache after 1 minute.
+                val clearCacheWorkRequest = OneTimeWorkRequestBuilder<ClearProductsCacheWorker>()
+                    .setInitialDelay(1, TimeUnit.MINUTES)
+                    .addTag(CLEAR_PRODUCT_CACHE_WORKER_TAG)
+                    .addTag("$CLEAR_PRODUCT_CACHE_WORKER_TAG_PREFIX$id")
+                    .setInputData(
+                        workDataOf(
+                            Pair(
+                                first = CLEAR_PRODUCT_CACHE_INPUT_DATA_KEY_PRODUCT_ID,
+                                second = id
+                            )
                         )
                     )
+                    .build()
+                WorkManager.getInstance(context).apply {
+                    cancelAllWorkByTag("$CLEAR_PRODUCT_CACHE_WORKER_TAG_PREFIX$id")
+                    enqueue(clearCacheWorkRequest)
+                }
+            } else {
+                val error = AlzaError.HTTP_ERROR
+                emit(
+                    value = Resource.Error(
+                        error = error,
+                        errorMessage = response.errorMessage
+                            ?: context.getString(error.errorMessageResId)
+                    )
                 )
-                .build()
-            WorkManager.getInstance(context).apply {
-                cancelAllWorkByTag("$CLEAR_PRODUCT_CACHE_WORKER_TAG_PREFIX$id")
-                enqueue(clearCacheWorkRequest)
             }
         } catch (e: HttpException) {
             // TODO I should handle all the exceptions better (I'm duplicating code here).

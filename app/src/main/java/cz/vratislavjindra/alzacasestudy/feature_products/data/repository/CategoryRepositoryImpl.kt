@@ -30,19 +30,30 @@ class CategoryRepositoryImpl @Inject constructor(
         emit(value = Resource.Loading(data = categories))
         var errorOccurred = false
         try {
-            val categoryList = api.getAllCategories()
-            // Clear old cached categories.
-            dao.deleteAllCategories()
-            // Save the new categories to cache.
-            dao.insertCategories(categories = categoryList.data.map { it.toCategoryEntity() })
-            // Schedule a worker to clear the cache after 1 minute.
-            val clearCacheWorkRequest = OneTimeWorkRequestBuilder<ClearCategoriesCacheWorker>()
+            val response = api.getAllCategories()
+            if (response.errorCode == 0 && response.errorMessage == null && response.data != null) {
+                // Clear old cached categories.
+                dao.deleteAllCategories()
+                // Save the new categories to cache.
+                dao.insertCategories(categories = response.data.map { it.toCategoryEntity() })
+                // Schedule a worker to clear the cache after 1 minute.
+                val clearCacheWorkRequest = OneTimeWorkRequestBuilder<ClearCategoriesCacheWorker>()
                     .setInitialDelay(1, TimeUnit.MINUTES)
                     .addTag(CLEAR_CATEGORIES_CACHE_WORKER_TAG)
                     .build()
-            WorkManager.getInstance(context).apply {
-                cancelAllWorkByTag(CLEAR_CATEGORIES_CACHE_WORKER_TAG)
-                enqueue(clearCacheWorkRequest)
+                WorkManager.getInstance(context).apply {
+                    cancelAllWorkByTag(CLEAR_CATEGORIES_CACHE_WORKER_TAG)
+                    enqueue(clearCacheWorkRequest)
+                }
+            } else {
+                val error = AlzaError.HTTP_ERROR
+                emit(
+                    value = Resource.Error(
+                        error = error,
+                        errorMessage = response.errorMessage
+                            ?: context.getString(error.errorMessageResId)
+                    )
+                )
             }
         } catch (e: HttpException) {
             // TODO I should handle all the exceptions better (I'm duplicating code here).
