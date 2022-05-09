@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar
+package cz.vratislavjindra.alzacasestudy.ui.components.top_app_bar
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

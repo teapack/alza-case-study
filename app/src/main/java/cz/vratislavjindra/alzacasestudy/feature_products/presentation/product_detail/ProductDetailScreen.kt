@@ -13,142 +13,195 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import cz.vratislavjindra.alzacasestudy.R
-import cz.vratislavjindra.alzacasestudy.ui.common.AlzaScaffold
-import cz.vratislavjindra.alzacasestudy.ui.common.product.action.BuyProductAction
-import cz.vratislavjindra.alzacasestudy.ui.common.product.attribute.*
-import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
+import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
+import cz.vratislavjindra.alzacasestudy.ui.components.AlzaScaffold
+import cz.vratislavjindra.alzacasestudy.ui.components.layout.EmptyPanePlaceholder
+import cz.vratislavjindra.alzacasestudy.ui.components.loading.LoadingIndicatorFullscreen
+import cz.vratislavjindra.alzacasestudy.ui.components.product.action.BuyProductAction
+import cz.vratislavjindra.alzacasestudy.ui.components.product.attribute.*
+import cz.vratislavjindra.alzacasestudy.ui.components.top_app_bar.TopAppBarAction
 
 @Composable
 fun ProductDetailScreen(
-    navController: NavController,
-    viewModel: ProductDetailViewModel = hiltViewModel(),
-    productId: Int?
+    product: Product,
+    loading: Boolean,
+    errors: List<AlzaError>,
+    onUpClick: () -> Unit,
+    onRefresh: () -> Unit,
+    onProductActionClick: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     AlzaScaffold(
-        navController = navController,
+        modifier = Modifier,
         snackbarHostState = snackbarHostState,
         topBarTitle = stringResource(id = R.string.title_product_detail),
+        upNavigationAction = onUpClick,
         topAppBarActions = listOf(
             TopAppBarAction(
                 icon = Icons.Rounded.Refresh,
-                rotateIcon = viewModel.state.value.loading,
+                rotateIcon = loading,
                 contentDescription = stringResource(
                     id = R.string.content_description_button_refresh_product_detail
                 )
-            ) { viewModel.getProductDetail(productId = productId) }
+            ) { onRefresh() }
         ),
-        snackbarFlow = viewModel.snackbarFlow
+//        snackbarFlow = viewModel.snackbarFlow
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
-            viewModel.state.value.product?.let { product ->
-                ProductDetail(
-                    name = product.name,
-                    description = product.description,
-                    imageUrl = product.imageUrl,
-                    price = product.price,
-                    availability = product.availability,
-                    canBuy = product.canBuy,
-                    rating = product.rating,
-                    paddingValues = paddingValues,
-                    onProductActionClick = viewModel::onProductActionClick
-                )
-            }
-            if (viewModel.state.value.loading) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingValues = paddingValues)
-                )
-            }
+            ProductDetailScreenContent(
+                modifier = Modifier,
+                paddingValues = paddingValues,
+                product = product,
+                loading = loading,
+                errors = errors,
+                onRefresh = onRefresh,
+                onProductActionClick = onProductActionClick
+            )
         }
     }
 }
 
 @Composable
-private fun ProductDetail(
-    name: String,
-    description: String,
-    imageUrl: String?,
-    price: String?,
-    availability: String,
-    canBuy: Boolean,
-    rating: Float,
+fun NoProductDetailScreen(
+    loading: Boolean,
+    errors: List<AlzaError>,
+    onUpClick: () -> Unit,
+    onRefresh: () -> Unit
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    AlzaScaffold(
+        modifier = Modifier,
+        snackbarHostState = snackbarHostState,
+        topBarTitle = stringResource(id = R.string.title_product_detail),
+        upNavigationAction = onUpClick,
+        topAppBarActions = listOf(
+            TopAppBarAction(
+                icon = Icons.Rounded.Refresh,
+                rotateIcon = loading,
+                contentDescription = stringResource(
+                    id = R.string.content_description_button_refresh_product_detail
+                )
+            ) { onRefresh() }
+        ),
+//        snackbarFlow = viewModel.snackbarFlow
+    ) { paddingValues ->
+        NoProductDetailScreenContent(
+            modifier = Modifier,
+            paddingValues = paddingValues,
+            loading = loading,
+            errors = errors,
+            onRefresh = onRefresh
+        )
+    }
+}
+
+@Composable
+fun NoProductDetailScreenContent(
+    modifier: Modifier,
     paddingValues: PaddingValues,
+    loading: Boolean,
+    errors: List<AlzaError>,
+    onRefresh: () -> Unit
+) {
+    if (loading) {
+        LoadingIndicatorFullscreen(
+            modifier = modifier,
+            paddingValues = paddingValues
+        )
+    } else {
+        EmptyPanePlaceholder(
+            modifier = modifier,
+            paddingValues = paddingValues,
+            text = "No product detail\nLoading: $loading\nErrors: $errors"
+        )
+    }
+}
+
+@Composable
+fun ProductDetailScreenContent(
+    modifier: Modifier,
+    paddingValues: PaddingValues,
+    product: Product,
+    loading: Boolean,
+    errors: List<AlzaError>,
+    onRefresh: () -> Unit,
     onProductActionClick: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .weight(weight = 1f)
-                .verticalScroll(state = rememberScrollState())
-        ) {
-            ProductTitle(
-                title = name,
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    top = paddingValues.calculateTopPadding() + 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                ),
-                small = false
-            )
-            StarRating(
-                rating = rating,
-                small = false,
-                modifier = Modifier.padding(horizontal = 10.dp)
-            )
-            Spacer(modifier = Modifier.height(height = 16.dp))
-            imageUrl?.let {
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data(data = it)
-                        .crossfade(enable = true)
-                        .build(),
-                    contentDescription = name,
-                    modifier = Modifier.aspectRatio(ratio = 1f)
+    if (loading) {
+        LoadingIndicatorFullscreen(
+            modifier = modifier,
+            paddingValues = paddingValues
+        )
+    } else {
+        Column(modifier = modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .weight(weight = 1f)
+                    .verticalScroll(state = rememberScrollState())
+            ) {
+                ProductTitle(
+                    title = product.name,
+                    modifier = Modifier
+                        .padding(all = 16.dp)
+                        .padding(top = paddingValues.calculateTopPadding()),
+                    small = false
+                )
+                StarRating(
+                    rating = product.rating,
+                    small = false,
+                    modifier = Modifier.padding(horizontal = 10.dp)
                 )
                 Spacer(modifier = Modifier.height(height = 16.dp))
-            }
-            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                ProductAvailability(
-                    availability = availability,
-                    available = canBuy,
-                    small = false,
-                    modifier = Modifier.weight(weight = 1f)
-                )
-            }
-            ProductDescription(
-                description = description,
-                short = false,
-                modifier = Modifier.padding(all = 16.dp)
-            )
-        }
-        val navigationBarsPadding = WindowInsets.navigationBars.only(
-            sides = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
-        ).asPaddingValues().calculateBottomPadding()
-        Surface(shadowElevation = 16.dp) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .padding(bottom = navigationBarsPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                price?.let {
-                    ProductPrice(price = price, small = false)
+                product.imageUrl?.let { imageUrl ->
+                    AsyncImage(
+                        model = ImageRequest.Builder(context = LocalContext.current)
+                            .data(data = imageUrl)
+                            .crossfade(enable = true)
+                            .build(),
+                        contentDescription = product.name,
+                        modifier = Modifier.aspectRatio(ratio = 1f)
+                    )
+                    Spacer(modifier = Modifier.height(height = 16.dp))
                 }
-                Spacer(
-                    modifier = Modifier
-                        .width(width = 16.dp)
-                        .weight(weight = 1f)
+                Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    ProductAvailability(
+                        availability = product.availability,
+                        available = product.canBuy,
+                        small = false,
+                        modifier = Modifier.weight(weight = 1f)
+                    )
+                }
+                ProductDescription(
+                    description = product.description,
+                    short = false,
+                    modifier = Modifier.padding(all = 16.dp)
                 )
-                BuyProductAction(onClick = onProductActionClick)
+            }
+            val navigationBarsPadding = WindowInsets.navigationBars.only(
+                sides = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
+            ).asPaddingValues().calculateBottomPadding()
+            Surface(shadowElevation = 16.dp) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(bottom = navigationBarsPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    product.price?.let { price ->
+                        ProductPrice(price = price, small = false)
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .width(width = 16.dp)
+                            .weight(weight = 1f)
+                    )
+                    BuyProductAction(onClick = onProductActionClick)
+                }
             }
         }
     }

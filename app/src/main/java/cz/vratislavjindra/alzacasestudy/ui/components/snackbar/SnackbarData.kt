@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.snackbar
+package cz.vratislavjindra.alzacasestudy.ui.components.snackbar
 
 import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
 

@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import cz.vratislavjindra.alzacasestudy.ui.theme.AlzaCaseStudyTheme
+import cz.vratislavjindra.alzacasestudy.ui.AlzaApp
+import cz.vratislavjindra.alzacasestudy.ui.util.rememberWindowInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -14,9 +15,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            AlzaCaseStudyTheme {
-                NavGraph()
-            }
+            val windowInfo = rememberWindowInfo()
+            AlzaApp(windowInfo = windowInfo)
         }
     }
 }

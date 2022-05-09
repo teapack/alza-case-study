@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common
+package cz.vratislavjindra.alzacasestudy.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -7,10 +7,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
-import cz.vratislavjindra.alzacasestudy.ui.common.snackbar.SnackbarData
-import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.AlzaTopAppBar
-import cz.vratislavjindra.alzacasestudy.ui.common.top_app_bar.TopAppBarAction
+import cz.vratislavjindra.alzacasestudy.ui.components.snackbar.SnackbarData
+import cz.vratislavjindra.alzacasestudy.ui.components.top_app_bar.AlzaTopAppBar
+import cz.vratislavjindra.alzacasestudy.ui.components.top_app_bar.TopAppBarAction
 import cz.vratislavjindra.alzacasestudy.ui.theme.BackgroundDark
 import cz.vratislavjindra.alzacasestudy.ui.theme.BackgroundLight
 import kotlinx.coroutines.flow.Flow
@@ -19,10 +18,10 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun AlzaScaffold(
-    navController: NavController,
+    modifier: Modifier,
     snackbarHostState: SnackbarHostState,
     topBarTitle: String,
-    upNavigationAction: (() -> Unit)? = { navController.navigateUp() },
+    upNavigationAction: (() -> Unit)?,
     topAppBarActions: List<TopAppBarAction> = listOf(),
     snackbarFlow: Flow<SnackbarData>? = null,
     content: @Composable (paddingValues: PaddingValues) -> Unit

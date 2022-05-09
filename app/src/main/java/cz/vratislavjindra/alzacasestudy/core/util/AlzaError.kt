@@ -9,5 +9,7 @@ enum class AlzaError(@StringRes val errorMessageResId: Int) {
     HTTP_ERROR(errorMessageResId = R.string.error_http),
     INVALID_CATEGORY(errorMessageResId = R.string.error_invalid_category),
     INVALID_PRODUCT(errorMessageResId = R.string.error_invalid_product),
+    NO_SELECTED_CATEGORY(errorMessageResId = R.string.error_no_selected_category),
+    NO_SELECTED_PRODUCT(errorMessageResId = R.string.error_no_selected_product),
     TIMEOUT(errorMessageResId = R.string.error_timeout)
 }

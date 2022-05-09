@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.list
+package cz.vratislavjindra.alzacasestudy.ui.components.list
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

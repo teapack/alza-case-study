@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cz.vratislavjindra.alzacasestudy.Screen
 import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
 import cz.vratislavjindra.alzacasestudy.core.util.Resource
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.use_case.GetProductDetail
-import cz.vratislavjindra.alzacasestudy.ui.common.snackbar.SnackbarData
+import cz.vratislavjindra.alzacasestudy.ui.Screen
+import cz.vratislavjindra.alzacasestudy.ui.components.snackbar.SnackbarData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel

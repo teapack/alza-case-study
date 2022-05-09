@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.list
+package cz.vratislavjindra.alzacasestudy.ui.components.list
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api

@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.list
+package cz.vratislavjindra.alzacasestudy.ui.components.list
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

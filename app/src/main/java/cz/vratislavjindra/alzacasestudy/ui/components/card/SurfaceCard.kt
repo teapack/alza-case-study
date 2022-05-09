@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.card
+package cz.vratislavjindra.alzacasestudy.ui.components.card
 
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 fun SurfaceCard(
     modifier: Modifier = Modifier,
+    selected: Boolean,
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -19,7 +20,11 @@ fun SurfaceCard(
         onClick = onClick,
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = if (selected) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp,

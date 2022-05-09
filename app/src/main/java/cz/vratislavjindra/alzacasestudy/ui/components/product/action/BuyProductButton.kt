@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.product.action
+package cz.vratislavjindra.alzacasestudy.ui.components.product.action
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width

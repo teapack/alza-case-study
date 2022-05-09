@@ -1,4 +1,4 @@
-package cz.vratislavjindra.alzacasestudy.ui.common.product.attribute
+package cz.vratislavjindra.alzacasestudy.ui.components.product.attribute
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
