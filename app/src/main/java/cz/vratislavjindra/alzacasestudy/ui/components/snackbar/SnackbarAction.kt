@@ -1,6 +1,8 @@
 package cz.vratislavjindra.alzacasestudy.ui.components.snackbar
 
+import androidx.annotation.StringRes
+
 data class SnackbarAction(
-    val actionLabel: String,
+    @StringRes val actionLabelResId: Int,
     val action: () -> Unit
 )

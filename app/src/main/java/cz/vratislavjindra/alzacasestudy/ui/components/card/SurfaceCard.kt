@@ -1,16 +1,31 @@
 package cz.vratislavjindra.alzacasestudy.ui.components.card
 
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cz.vratislavjindra.alzacasestudy.core.utils.CompletePreviews
+import cz.vratislavjindra.alzacasestudy.ui.theme.AlzaCaseStudyTheme
+import cz.vratislavjindra.alzacasestudy.ui.theme.utils.applyTonalElevation
+
+@Composable
+fun SurfaceCard(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    SurfaceCardSelectable(
+        modifier = modifier,
+        selected = false,
+        onClick = onClick,
+        content = content
+    )
+}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SurfaceCard(
+fun SurfaceCardSelectable(
     modifier: Modifier = Modifier,
     selected: Boolean,
     onClick: () -> Unit,
@@ -19,20 +34,52 @@ fun SurfaceCard(
     Card(
         onClick = onClick,
         modifier = modifier,
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = if (selected) {
-                MaterialTheme.colorScheme.primary
+                MaterialTheme.colorScheme.applyTonalElevation(
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    elevation = 3.dp
+                )
             } else {
                 MaterialTheme.colorScheme.surface
             }
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp,
-            pressedElevation = 6.dp,
-            focusedElevation = 6.dp,
-            hoveredElevation = 4.dp,
-            draggedElevation = 8.dp,
-            disabledElevation = 0.dp
         )
     ) { content() }
+}
+
+@Composable
+@CompletePreviews
+fun SurfaceCardSelectableSelectedPreview() {
+    AlzaCaseStudyTheme {
+        SurfaceCardSelectable(
+            selected = true,
+            onClick = {},
+            content = {
+                Text(
+                    text = "Selected card",
+                    modifier = Modifier.padding(all = 16.dp)
+                )
+            }
+        )
+    }
+}
+
+
+
+@Composable
+@CompletePreviews
+fun SurfaceCardSelectableNotSelectedPreview() {
+    AlzaCaseStudyTheme {
+        SurfaceCardSelectable(
+            selected = false,
+            onClick = {},
+            content = {
+                Text(
+                    text = "Not selected card",
+                    modifier = Modifier.padding(all = 16.dp)
+                )
+            }
+        )
+    }
 }

@@ -14,8 +14,14 @@ import androidx.compose.ui.unit.dp
 import cz.vratislavjindra.alzacasestudy.R
 
 @Composable
-fun BuyProductAction(onClick: () -> Unit) {
-    TextButton(onClick = onClick) {
+fun BuyProductAction(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
         Icon(
             imageVector = Icons.Rounded.ShoppingCart,
             contentDescription = stringResource(

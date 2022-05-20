@@ -1,28 +1,9 @@
 package cz.vratislavjindra.alzacasestudy.ui.components.snackbar
 
-import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
+import androidx.annotation.StringRes
 
-sealed class SnackbarData(
-    val snackbarAction: SnackbarAction?,
-    val dismissAction: (() -> Unit)?
-) {
-
-    data class MessageSnackbarData(
-        val message: String,
-        val onAction: SnackbarAction? = null,
-        val onDismiss: (() -> Unit)? = null
-    ): SnackbarData(
-        snackbarAction = onAction,
-        dismissAction = onDismiss
-    )
-
-    data class ErrorSnackbarData(
-        val error: AlzaError,
-        val message: String? = null,
-        val onAction: SnackbarAction? = null,
-        val onDismiss: (() -> Unit)? = null
-    ): SnackbarData(
-        snackbarAction = onAction,
-        dismissAction = onDismiss
-    )
-}
+data class SnackbarData(
+    @StringRes val messageResId: Int,
+    val snackbarAction: SnackbarAction? = null,
+    val onDismiss: (() -> Unit)? = null
+)

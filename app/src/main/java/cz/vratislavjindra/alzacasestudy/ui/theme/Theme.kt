@@ -53,16 +53,16 @@ fun AlzaCaseStudyTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        val systemUiController = rememberSystemUiController()
-        SideEffect {
-            systemUiController.setStatusBarColor(
-                color = colorScheme.primary.copy(alpha = TOP_APP_BAR_ALPHA),
-                darkIcons = darkTheme
-            )
-        }
-    }
+//    val view = LocalView.current
+//    if (!view.isInEditMode) {
+//        val systemUiController = rememberSystemUiController()
+//        SideEffect {
+//            systemUiController.setStatusBarColor(
+//                color = colorScheme.primary.copy(alpha = 0f),
+//                darkIcons = darkTheme
+//            )
+//        }
+//    }
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

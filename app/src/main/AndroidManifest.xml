@@ -16,7 +16,7 @@
         android:theme="@style/Theme.AlzaCaseStudy"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AlzaCaseStudy">
             <intent-filter>
@@ -25,20 +25,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- We need to disable the default WorkManager initialization (which happens automatically)
-        and initialize it manually so that we can use Hilt dependency injection with work
-        manager. -->
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
-            <!-- We're disabling the WorkManager initialization only, and we want to keep other
-            androidx.startup initialization processes intact. -->
-            <meta-data
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-        </provider>
     </application>
 </manifest>

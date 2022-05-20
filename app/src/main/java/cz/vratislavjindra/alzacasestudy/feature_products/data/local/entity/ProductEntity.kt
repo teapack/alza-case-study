@@ -3,7 +3,6 @@ package cz.vratislavjindra.alzacasestudy.feature_products.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
-import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductListItem
 
 @Entity(tableName = "products")
 data class ProductEntity(
@@ -21,19 +20,6 @@ data class ProductEntity(
 
     fun toProduct(): Product {
         return Product(
-            id = id,
-            name = name,
-            description = description,
-            imageUrl = imageUrl,
-            price = price,
-            availability = availability,
-            canBuy = canBuy,
-            rating = rating
-        )
-    }
-
-    fun toProductListItem(): ProductListItem {
-        return ProductListItem(
             id = id,
             name = name,
             description = description,

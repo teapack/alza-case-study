@@ -47,7 +47,7 @@ GET request (id odpovídá id produktu z druhé obrazovky)
 - Napsáno pouze v jazyku Kotlin.
 - Vyberte vhodnou architekturu – MVVM, MVI nebo případně jinou.
 - Android Architecture Components – zejména ViewModel a LifeCycle.
-- Databáze pro cachování dat po dobu jedné minuty – SQLDelight, případně Room.
+- Databáze pro cachování dat – SQLDelight, případně Room.
 - Kotlin Coroutines (Flow a Channels) a zaměření zejména na jejich vhodné použití. Ideálně nepoužívat LiveData.
 - Jetpack Compose namísto Android View v XML.
 - Využijte Kotlinx.serialization místo GSON, Moshi apod.

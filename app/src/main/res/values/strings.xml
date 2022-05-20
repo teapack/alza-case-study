@@ -3,27 +3,27 @@
     <string name="app_name">Alza Case Study</string>
 
     <string name="button_buy">Buy</string>
+    <string name="button_refresh">Refresh</string>
+    <string name="button_try_again">Try again</string>
 
     <string name="content_description_button_add_to_comparison">Add to comparison</string>
     <string name="content_description_button_add_to_favorites">Add to favorites</string>
     <string name="content_description_button_buy">Buy</string>
     <string name="content_description_button_navigate_up">Navigate up</string>
-    <string name="content_description_button_refresh_categories">Refresh categories</string>
-    <string name="content_description_button_refresh_product_detail">Refresh product detail</string>
-    <string name="content_description_button_refresh_products">Refresh products</string>
     <string name="content_description_button_share">Share</string>
+    <string name="content_description_error_illustration">Error illustration</string>
     <string name="content_description_product_rating">Product rating</string>
 
-    <string name="error_http">HTTP error</string>
-    <string name="error_invalid_category">Invalid category</string>
-    <string name="error_invalid_product">Invalid product</string>
-    <string name="error_no_selected_category">Select a category</string>
-    <string name="error_no_selected_product">Select a product</string>
-    <string name="error_not_implemented_yet">Not implemented yet</string>
-    <string name="error_timeout">Request timed out</string>
+    <string name="error_feature_not_implemented_yet">Not implemented yet</string>
+    <string name="error_invalid_category">Unknown category</string>
+    <string name="error_invalid_product">Product not found</string>
+    <string name="error_load_categories">Couldn\'t load categories, please try again later</string>
+    <string name="error_load_products">Couldn\'t load products, please try again later</string>
+    <string name="error_load_product_detail">Couldn\'t load the product detail, please try again later</string>
 
     <string name="title_categories">Categories</string>
-    <string name="title_loading">Loading…</string>
+    <string name="title_no_categories_available">No categories available at the moment</string>
+    <string name="title_no_products_available">No products available in the selected category</string>
     <string name="title_product_detail">Product detail</string>
     <string name="title_products">Products</string>
 </resources>
