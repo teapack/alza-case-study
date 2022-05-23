@@ -1,9 +1,9 @@
 package cz.vratislavjindra.alzacasestudy.feature_products.data.repository
 
-import cz.vratislavjindra.alzacasestudy.core.util.AlzaError
-import cz.vratislavjindra.alzacasestudy.core.util.Resource
+import cz.vratislavjindra.alzacasestudy.R
+import cz.vratislavjindra.alzacasestudy.core.data.Resource
+import cz.vratislavjindra.alzacasestudy.core.utils.ErrorMessage
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
-import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.ProductListItem
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +14,7 @@ class FakeProductRepository : ProductRepository {
 
     override suspend fun getProductsByCategory(
         categoryId: Int
-    ): Flow<Resource<List<ProductListItem>>> {
+    ): Flow<Resource<List<Product>>> {
         TODO("Not yet implemented")
     }
 
@@ -24,9 +24,9 @@ class FakeProductRepository : ProductRepository {
             if (product == null) {
                 emit(
                     value = Resource.Error(
-                        error = AlzaError.INVALID_PRODUCT,
-                        errorMessage = "Invalid product",
-                        data = null
+                        errorMessage = ErrorMessage(
+                            messageId = R.string.error_load_product_detail
+                        )
                     )
                 )
             } else {
