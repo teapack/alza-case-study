@@ -3,10 +3,7 @@ package cz.vratislavjindra.alzacasestudy.feature_products.data.repository
 import cz.vratislavjindra.alzacasestudy.R
 import cz.vratislavjindra.alzacasestudy.core.data.Resource
 import cz.vratislavjindra.alzacasestudy.core.utils.ErrorMessage
-import cz.vratislavjindra.alzacasestudy.feature_products.data.local.ProductDao
-import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.ProductApi
-import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.dao.FilterParameters
-import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.dao.GetProductsByCategoryRequest
+import cz.vratislavjindra.alzacasestudy.feature_products.data.ProductDataSource
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,44 +11,40 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
-    private val dao: ProductDao,
-    private val api: ProductApi
+    private val productLocalDataSource: ProductDataSource,
+    private val productRemoteDataSource: ProductDataSource
 ) : ProductRepository {
 
     override suspend fun getProductsByCategory(
         categoryId: Int
     ): Flow<Resource<List<Product>>> = flow {
         emit(value = Resource.Loading())
-        val products = dao.getProductsByCategory(categoryId = categoryId).map { it.toProduct() }
-        emit(value = Resource.Loading(data = products))
+        val productsResult = productLocalDataSource.getProductsByCategory(categoryId = categoryId)
+        emit(value = Resource.Loading(data = productsResult.getOrNull()))
         try {
-            val response = api.getProductsByCategory(
-                requestBody = GetProductsByCategoryRequest(
-                    filterParameters = FilterParameters(
-                        id = categoryId,
-                        params = emptyList()
-                    )
-                )
+            val responseResult = productRemoteDataSource.getProductsByCategory(
+                categoryId = categoryId
             )
-            if (
-                response.errorCode == 0 &&
-                response.errorMessage == null &&
-                response.data != null
-            ) {
+            if (responseResult.isSuccess) {
+                val newProducts = responseResult.getOrThrow()
                 // Clear old cached products.
-                dao.deleteProductsByCategory(categoryId = categoryId)
+                productLocalDataSource.deleteProductsByCategory(categoryId = categoryId)
                 // Save the new products to cache.
-                dao.insertProducts(
-                    products = response.data.map { it.toProductEntity(categoryId = categoryId) }
-                )
+                productLocalDataSource.saveProducts(products = newProducts)
             } else {
                 // API response contained errors.
-                throw IllegalStateException("API response contained errors.")
+                throw responseResult.exceptionOrNull()
+                    ?: IllegalStateException("API response contained errors.")
             }
-            val newProducts = dao.getProductsByCategory(categoryId = categoryId).map {
-                it.toProduct()
+            val newProductsResult = productLocalDataSource.getProductsByCategory(
+                categoryId = categoryId
+            )
+            if (newProductsResult.isSuccess) {
+                emit(value = Resource.Success(data = newProductsResult.getOrThrow()))
+            } else {
+                throw newProductsResult.exceptionOrNull()
+                    ?: IllegalStateException("No products available.")
             }
-            emit(value = Resource.Success(data = newProducts))
         } catch (exception: Exception) {
             exception.printStackTrace()
             emit(
@@ -66,28 +59,27 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getProductDetail(id: Int): Flow<Resource<Product>> = flow {
         emit(value = Resource.Loading())
-        val product = dao.getProduct(id = id)?.toProduct()
-        emit(value = Resource.Loading(data = product))
+        val productResult = productLocalDataSource.getProductDetail(id = id)
+        emit(value = Resource.Loading(data = productResult.getOrNull()))
         try {
-            val response = api.getProductDetail(productId = id)
-            if (
-                response.errorCode == 0 &&
-                response.errorMessage == null &&
-                response.data != null
-            ) {
+            val responseResult = productRemoteDataSource.getProductDetail(id = id)
+            if (responseResult.isSuccess) {
+                val newProduct = responseResult.getOrThrow()
                 // Clear old cached product.
-                dao.deleteProductById(id = id)
+                productLocalDataSource.deleteProduct(id = id)
                 // Save the new product to cache.
-                dao.insertProduct(product = response.data.toProductEntity())
+                productLocalDataSource.saveProduct(product = newProduct)
             } else {
                 // API response contained errors.
-                throw IllegalStateException("API response contained errors.")
+                throw responseResult.exceptionOrNull()
+                    ?: IllegalStateException("API response contained errors.")
             }
-            val newProduct = dao.getProduct(id = id)?.toProduct()
-            if (newProduct == null) {
-                throw IllegalArgumentException("Unable to find product.")
+            val newProductResult = productLocalDataSource.getProductDetail(id = id)
+            if (newProductResult.isSuccess) {
+                emit(value = Resource.Success(data = newProductResult.getOrThrow()))
             } else {
-                emit(value = Resource.Success(data = newProduct))
+                throw newProductResult.exceptionOrNull()
+                    ?: IllegalArgumentException("Unable to find product.")
             }
         } catch (exception: Exception) {
             exception.printStackTrace()

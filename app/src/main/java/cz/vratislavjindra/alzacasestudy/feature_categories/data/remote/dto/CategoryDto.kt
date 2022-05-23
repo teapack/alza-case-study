@@ -1,6 +1,6 @@
 package cz.vratislavjindra.alzacasestudy.feature_categories.data.remote.dto
 
-import cz.vratislavjindra.alzacasestudy.feature_categories.data.local.entity.CategoryEntity
+import cz.vratislavjindra.alzacasestudy.feature_categories.domain.model.Category
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,8 +12,8 @@ data class CategoryDto(
     val order: Int
 ) {
 
-    fun toCategoryEntity(): CategoryEntity {
-        return CategoryEntity(
+    fun toCategory(): Category {
+        return Category(
             id = id,
             name = name,
             imageUrl = imageUrl,

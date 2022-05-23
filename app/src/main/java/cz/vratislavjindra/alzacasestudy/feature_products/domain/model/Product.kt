@@ -8,5 +8,7 @@ data class Product(
     val price: String?,
     val availability: String,
     val canBuy: Boolean,
-    val rating: Float
+    val rating: Float,
+    val order: Int,
+    val categoryId: Int
 )

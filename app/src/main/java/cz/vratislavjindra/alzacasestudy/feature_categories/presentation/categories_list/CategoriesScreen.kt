@@ -74,7 +74,8 @@ fun CategoriesScreenContent(
                                 element = Category(
                                     id = i,
                                     name = "",
-                                    imageUrl = null
+                                    imageUrl = null,
+                                    order = i
                                 )
                             )
                         }

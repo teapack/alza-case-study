@@ -18,6 +18,19 @@ data class ProductEntity(
     val categoryId: Int
 ) {
 
+    constructor(product: Product) : this(
+        id = product.id,
+        name = product.name,
+        description = product.description,
+        imageUrl = product.imageUrl,
+        price = product.price,
+        availability = product.availability,
+        canBuy = product.canBuy,
+        rating = product.rating,
+        order = product.order,
+        categoryId = product.categoryId
+    )
+
     fun toProduct(): Product {
         return Product(
             id = id,
@@ -27,7 +40,9 @@ data class ProductEntity(
             price = price,
             availability = availability,
             canBuy = canBuy,
-            rating = rating
+            rating = rating,
+            order = order,
+            categoryId = categoryId
         )
     }
 }

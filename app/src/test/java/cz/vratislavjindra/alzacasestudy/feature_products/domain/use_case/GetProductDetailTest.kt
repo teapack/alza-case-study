@@ -33,7 +33,9 @@ class GetProductDetailTest {
                     price = null,
                     availability = c.toString(),
                     canBuy = false,
-                    rating = 0f
+                    rating = 0f,
+                    order = index,
+                    categoryId = 0
                 )
             )
         }

@@ -80,7 +80,9 @@ fun ProductsScreenContent(
                                     price = null,
                                     availability = "",
                                     canBuy = false,
-                                    rating = 0f
+                                    rating = 0f,
+                                    order = i,
+                                    categoryId = 0
                                 )
                             )
                         }

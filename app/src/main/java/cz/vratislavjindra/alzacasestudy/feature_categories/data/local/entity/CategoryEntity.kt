@@ -12,11 +12,19 @@ data class CategoryEntity(
     val order: Int
 ) {
 
+    constructor(category: Category) : this(
+        id = category.id,
+        name = category.name,
+        imageUrl = category.imageUrl,
+        order = category.order
+    )
+
     fun toCategory(): Category {
         return Category(
             id = id,
             name = name,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            order = order
         )
     }
 }

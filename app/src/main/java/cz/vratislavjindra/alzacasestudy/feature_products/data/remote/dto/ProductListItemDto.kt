@@ -1,6 +1,6 @@
 package cz.vratislavjindra.alzacasestudy.feature_products.data.remote.dto
 
-import cz.vratislavjindra.alzacasestudy.feature_products.data.local.entity.ProductEntity
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,8 +17,8 @@ data class ProductListItemDto(
     val order: Int
 ) {
 
-    fun toProductEntity(categoryId: Int): ProductEntity {
-        return ProductEntity(
+    fun toProduct(categoryId: Int): Product {
+        return Product(
             id = id,
             name = name,
             description = description,

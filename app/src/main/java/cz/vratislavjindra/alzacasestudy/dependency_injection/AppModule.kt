@@ -3,13 +3,19 @@ package cz.vratislavjindra.alzacasestudy.dependency_injection
 import android.content.Context
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import cz.vratislavjindra.alzacasestudy.feature_categories.data.CategoryDataSource
 import cz.vratislavjindra.alzacasestudy.feature_categories.data.local.CategoryDatabase
+import cz.vratislavjindra.alzacasestudy.feature_categories.data.local.CategoryLocalDataSource
 import cz.vratislavjindra.alzacasestudy.feature_products.data.local.ProductDatabase
 import cz.vratislavjindra.alzacasestudy.feature_categories.data.remote.CategoryApi
+import cz.vratislavjindra.alzacasestudy.feature_categories.data.remote.CategoryRemoteDataSource
 import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.ProductApi
 import cz.vratislavjindra.alzacasestudy.feature_categories.data.repository.CategoryRepositoryImpl
 import cz.vratislavjindra.alzacasestudy.feature_products.data.repository.ProductRepositoryImpl
 import cz.vratislavjindra.alzacasestudy.feature_categories.domain.repository.CategoryRepository
+import cz.vratislavjindra.alzacasestudy.feature_products.data.ProductDataSource
+import cz.vratislavjindra.alzacasestudy.feature_products.data.local.ProductLocalDataSource
+import cz.vratislavjindra.alzacasestudy.feature_products.data.remote.ProductRemoteDataSource
 import cz.vratislavjindra.alzacasestudy.feature_products.domain.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
@@ -31,19 +37,53 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCategoryRepository(
-        api: CategoryApi,
-        db: CategoryDatabase
+        @Local categoryLocalDataSource: CategoryDataSource,
+        @Remote categoryRemoteDataSource: CategoryDataSource
     ): CategoryRepository {
-        return CategoryRepositoryImpl(api = api, dao = db.categoryDao)
+        return CategoryRepositoryImpl(
+            categoryLocalDataSource = categoryLocalDataSource,
+            categoryRemoteDataSource = categoryRemoteDataSource
+        )
     }
 
     @Provides
     @Singleton
     fun provideProductRepository(
-        api: ProductApi,
-        db: ProductDatabase
+        @Local productLocalDataSource: ProductDataSource,
+        @Remote productRemoteDataSource: ProductDataSource
     ): ProductRepository {
-        return ProductRepositoryImpl(api = api, dao = db.productDao)
+        return ProductRepositoryImpl(
+            productLocalDataSource = productLocalDataSource,
+            productRemoteDataSource = productRemoteDataSource
+        )
+    }
+
+    @Provides
+    @Remote
+    @Singleton
+    fun provideCategoryRemoteDataSource(api: CategoryApi): CategoryDataSource {
+        return CategoryRemoteDataSource(api = api)
+    }
+
+    @Local
+    @Provides
+    @Singleton
+    fun provideCategoryLocalDataSource(db: CategoryDatabase): CategoryDataSource {
+        return CategoryLocalDataSource(dao = db.categoryDao)
+    }
+
+    @Provides
+    @Remote
+    @Singleton
+    fun provideProductRemoteDataSource(api: ProductApi): ProductDataSource {
+        return ProductRemoteDataSource(api = api)
+    }
+
+    @Local
+    @Provides
+    @Singleton
+    fun provideProductLocalDataSource(db: ProductDatabase): ProductDataSource {
+        return ProductLocalDataSource(dao = db.productDao)
     }
 
     @Provides
@@ -80,7 +120,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideProductDatabase(@ApplicationContext context: Context) : ProductDatabase {
+    fun provideProductDatabase(@ApplicationContext context: Context): ProductDatabase {
         return Room
             .databaseBuilder(
                 context,
@@ -92,7 +132,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCategoryDatabase(@ApplicationContext context: Context) : CategoryDatabase {
+    fun provideCategoryDatabase(@ApplicationContext context: Context): CategoryDatabase {
         return Room
             .databaseBuilder(
                 context,

@@ -1,6 +1,6 @@
 package cz.vratislavjindra.alzacasestudy.feature_products.data.remote.dto
 
-import cz.vratislavjindra.alzacasestudy.feature_products.data.local.entity.ProductEntity
+import cz.vratislavjindra.alzacasestudy.feature_products.domain.model.Product
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,8 +18,8 @@ data class ProductDto(
     val categoryId: Int
 ) {
 
-    fun toProductEntity(): ProductEntity {
-        return ProductEntity(
+    fun toProduct(): Product {
+        return Product(
             id = id,
             name = name,
             description = description,
